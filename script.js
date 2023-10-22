@@ -1,35 +1,43 @@
-const row = document.querySelector(".row");
-const renderCard = (image, languages, stringMn, element) => {
-  row.insertAdjacentHTML(
-    "beforeend",
-    `<div class="col">
-      <div class="card h-100">
-        <img src="${image}" class="card-img-top" alt="..." />
-        <div class="card-body">
-          <h5 class="card-title">${element.name.common}</h5>
-          <p class="card-text">${element.region}</p>
-          <p class="card-text">👪 ${element.population}</p>
-          <p class="card-text">🤑${languages} </p>
-          <p class="card-text">💲${stringMn} </p>
-        </div>
-      </div>
-    </div>`
-  );
-};
+// Задание 1
+// 1. Описать функцию-конструктор Shop, которая создает объект магазина. У магазина есть два свойства -  название и адрес.
+// С помощью этого конструктора создать два объекта - например, для магазинов Green и ProStore (можно любые другие).
+// Добавить эти объекты в массив shops.
+// В итоге должен получиться массив объектов типа:
+// [{title: 'Green', address:  'ул. Петра Мстиславца 11, Минск'},{title: 'ProStore', address:  'пр-т Дзержинского, 126, Минск'}]
+// 2. С помощью метода map получить массив, в котором будут содержаться только адреса магазинов. То есть:
+// ['ул. Петра Мстиславца 11, Минск', 'пр-т Дзержинского, 126, Минск']
 
-fetch("https://restcountries.com/v3.1/all")
-  .then((response) => response.json())
-  .then((data) => {
-    data.forEach((element, i) => {
-      if ((i + 1) % 10 === 0) {
-        const languages = element.languages
-          ? Object.values(element.languages).join(",")
-          : "-";
-        const currencies = element.currencies ? Object.values(element.currencies) : [];
-        const stringMn = currencies.length
-          ? currencies.map((element) => element.name + " " + element.symbol).join(", ")
-          : "-";
-        renderCard(element.flags.svg, languages, stringMn, element);
-      }
+
+function shop(title, address){
+    this.title = title;
+    this.address = address;
+  }
+  const green = new shop('Green', 'ул. Петра Мстиславца 11, Минск');
+  const proStore = new shop('ProStore', 'пр-т Дзержинского, 126, Минск');
+  const shops = [green, proStore];
+  const arrayAddress = shops.map(({address}) => address);
+  console.log(arrayAddress);
+
+
+  
+// Задание 2
+// Напишите асинхронную функцию, которая получает список пользователей с сервера jsonplaceholder. Выведите список пользователей на страницу.
+// В задании используйте синтаксис async-await и предусмотрите обработку ошибок.
+
+
+const url = 'https://jsonplaceholder.typicode.com/users';
+const ul = document.querySelector('ul');
+const fnUl = async () => {
+  try {
+    const response = await fetch(url);
+    const fnUl = await response.json();
+    fnUl.forEach((item) => {
+      ul.insertAdjacentHTML('beforeend', `<li>${item.name}</li>`);
     });
-  });
+  } catch (error){
+    console.error(error.message);
+  }
+};
+fnUl();
+
+
