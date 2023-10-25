@@ -1,43 +1,39 @@
-// Задание 1
-// 1. Описать функцию-конструктор Shop, которая создает объект магазина. У магазина есть два свойства -  название и адрес.
-// С помощью этого конструктора создать два объекта - например, для магазинов Green и ProStore (можно любые другие).
-// Добавить эти объекты в массив shops.
-// В итоге должен получиться массив объектов типа:
-// [{title: 'Green', address:  'ул. Петра Мстиславца 11, Минск'},{title: 'ProStore', address:  'пр-т Дзержинского, 126, Минск'}]
-// 2. С помощью метода map получить массив, в котором будут содержаться только адреса магазинов. То есть:
-// ['ул. Петра Мстиславца 11, Минск', 'пр-т Дзержинского, 126, Минск']
 
+    const userLi = document.getElementById('userList');
+    const userData = document.getElementById('userInfo');
 
-function shop(title, address){
-    this.title = title;
-    this.address = address;
-  }
-  const green = new shop('Green', 'ул. Петра Мстиславца 11, Минск');
-  const proStore = new shop('ProStore', 'пр-т Дзержинского, 126, Минск');
-  const shops = [green, proStore];
-  const arrayAddress = shops.map(({address}) => address);
-  console.log(arrayAddress);
+    const showUserData = (user) => {
+        userData.innerHTML = `
+          <div class="card-body">
+            <h5 class="card-title">${user.name}</h5>
+            <p class="card-text"><strong> Username: </strong> ${user.username}</p>
+            <p class="card-text"><strong> Address: </strong> ${user.address.street}, ${user.address.suite}, ${user.address.city}, ${user.address.zipcode}</p>
+            <p class="card-text"><strong> Company: </strong> ${user.company.name}</p>
+            <p class="card-text"><strong> Email: </strong> <a href="${user.email}">${user.email}</a></p>
+          </div>
+        `;
+      };
 
+      const showUserLi = (users) => {
+        users.forEach((user) => {
+          const listItem = document.createElement('button');
+          listItem.classList.add('list-group-item', 'list-group-item-action');
+          listItem.textContent = user.name;
+          listItem.addEventListener('click', () => showUserData(user));
+          userLi.appendChild(listItem);
+        });
+      };
 
-  
-// Задание 2
-// Напишите асинхронную функцию, которая получает список пользователей с сервера jsonplaceholder. Выведите список пользователей на страницу.
-// В задании используйте синтаксис async-await и предусмотрите обработку ошибок.
-
-
-const url = 'https://jsonplaceholder.typicode.com/users';
-const ul = document.querySelector('ul');
-const fnUl = async () => {
-  try {
-    const response = await fetch(url);
-    const fnUl = await response.json();
-    fnUl.forEach((item) => {
-      ul.insertAdjacentHTML('beforeend', `<li>${item.name}</li>`);
-    });
-  } catch (error){
-    console.error(error.message);
-  }
-};
-fnUl();
-
-
+      const serverUsers = async () => {
+        try {
+          const response = await fetch('https://jsonplaceholder.typicode.com/users');
+          if(!response.ok){
+            throw new Error('Ошибка статус-кода')
+        }
+          const users = await response.json();
+          showUserLi(users);
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      serverUsers();
