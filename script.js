@@ -32,6 +32,7 @@
         }
           const users = await response.json();
           showUserLi(users);
+          showUserData(users[0]);
         } catch (error) {
           console.log(error.message);
         }
